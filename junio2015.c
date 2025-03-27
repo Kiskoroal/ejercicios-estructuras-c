@@ -47,8 +47,7 @@ int main(){
 (1,25 puntos) Suponiendo que la estructura ya tiene la información almacenada,
 diseña una función en pseudocódigo que reciba como parámetro la estructura , el nombre de un club y
 una modalidad (Snipe, Láser u Optimits) y escriba los puntos
-totales obtenidos por el club en dicha modalidad.
-Para calcular los puntos de un regatista hay que tener en cuenta que todos los regatistas
+totales obtenidos por el club en dicha modalidad.Para calcular los puntos de un regatista hay que tener en cuenta que todos los regatistas
 hacen un descarte, es decir, tienen que eliminar de sus cinco puntuaciones la peor de todas (la más alta) y
 el resto se sumará para calcular la puntuación total.
 */
