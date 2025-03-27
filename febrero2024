@@ -1,0 +1,285 @@
+#ifndef ASIGNATURAS_H
+#define ASIGNATURAS_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*typedef struct prueba {
+    int dia;
+    int mes;
+    float calificacion;
+} prueba;
+
+typedef struct asignatura {
+    char nombre[50];
+    prueba ejercicios[4];
+    prueba cuestionarios[3];
+} asignatura;*/
+
+typedef struct asignatura asignatura;
+typedef struct prueba prueba;
+
+#define N_ASIGNATURAS 8
+
+/*typedef struct conjunto_asignaturas {
+    asignatura *asignaturas;
+    int n_asignaturas;
+} conjunto_asignaturas;*/
+
+typedef struct conjunto_asignaturas conjunto_asignaturas;
+
+void pruebas_por_mes(asignatura* asignaturas, int mes);
+void imprimir_nota_final_IA(asignatura* asignaturas, const char* nombre_asignatura);
+void imprimir_nota_final(asignatura* asignaturas, const char* nombre_asignatura);
+int indice_asignatura(asignatura* asignaturas, const char* nombre_asignatura);
+float nota_final_asignatura(asignatura *asignatura);
+void escribir_en_fichero(asignatura *asignatura, float nota);
+void escribir_en_fichero_con_nombre_asignatura(asignatura *asignatura, double nota);
+void imprimir_asignaturas_terminal(asignatura* asignaturas);
+void imprimir_asignaturas_terminal_modular(asignatura* asignaturas);
+void imprimir_asignatura_terminal(asignatura *A);
+void imprimir_prueba_terminal(prueba *P, const char *tipo);
+void imprimir_asignaturas_terminal_modular_sin_punteros(asignatura* asignaturas);
+void imprimir_asignatura_terminal_sin_punteros(asignatura A);
+void imprimir_prueba_terminal_sin_punteros(prueba P, const char *tipo);
+void imprimir_asignaturas(conjunto_asignaturas* asignaturas);
+void imprimir_asignaturas_modular(conjunto_asignaturas* asignaturas);
+float *reservar_memoria_para_notas_finales(int n_asignaturas);
+void escribir_notas_finales(conjunto_asignaturas *AA, float *notas_finales);
+void imprimir_asignaturas_ficheros(conjunto_asignaturas *AA, float *notas_finales);
+char *reservar_memoria_para_nombre_de_fichero(const char *nombre_asignatura);
+FILE *abrir_fichero_para_asignatura(const char *nombre_asignatura);
+void imprimir_asignatura_fichero(FILE* f, asignatura *A, float nota_final);
+void imprimir_prueba_fichero(FILE* f, prueba *P, const char *tipo);
+
+#endif
+
+/*
+    1.- (3 puntos) Un estudiante desea organizar la información relativa a los plazos de entrega y las
+    calificaciones de cada una de las pruebas de evaluación que deberá realizar para las asignaturas
+    de  las  que  se  ha  matriculado  durante  el  curso  23-24.  El  estudiante  está  matriculado  de  8
+    asignaturas y cada asignatura tiene previstas 4 entregas de ejercicios y 3 cuestionarios de teoría
+    durante el curso. Todas las pruebas de evaluación, tanto los ejercicios como los cuestionarios, se
+    califican con una nota de 0 a 10. Para cada asignatura se deberá almacenar, su nombre, la fecha
+    de cada una de las pruebas (día y mes), y la calificación que ha obtenido en cada prueba.
+*/
+
+/*
+    a) (0,75 puntos) Diseña en pseudocódigo y en lenguaje C la estructura la estructura necesaria
+    parar almacenar dicha información.
+*/
+
+typedef struct prueba{
+    // Completar
+    float nota;
+    int dia;
+    int mes;
+    int tipo; //0 cuestionario y 1 ejercicio
+} prueba;
+
+typedef struct asignatura{
+    // Completar. Pongamos que un nombre de asignatura tiene como máximo 49 caracteres
+    prueba pruebas[7];
+    char  nombre[50];
+} asignatura;
+
+#define N_ASIGNATURAS 8
+/*
+    Es una buena práctica definir macros para las constantes.
+    Imagina que después de varios meses vuelves a leer tu código y ya no recuerdas lo que hacía
+    ¿cómo te costará menos recordarlo?
+
+    for(int i = 0; i<8; ++i) ...
+    for(int i = 0; i<N_ASIGNATURAS; ++i) ...
+*/
+
+// ¿Y si no te garantizan que sean 8 asignaturas?
+// ¿Y si te dicen que son 8, pero luego te piden que sea variable?
+// ¿Y si te piden que sea variable desde el principio?
+typedef struct conjunto_asignaturas{
+    // Completar (no requiere más de 2 campos)
+    asignatura *asignaturas;
+    int numAsignatura;
+} conjunto_asignaturas;
+
+/*
+    Suponiendo  que  la  información  de  las  pruebas  del  curso  ya  está  almacenada  en  la
+    estructura:
+
+    b) (1,25 puntos ) Diseña una función en pseudocódigo que reciba como parámetro la estructura
+    diseñada en el apartado a) y un número de mes y escriba por pantalla para cada asignatura el
+    nombre de la misma y los días del mes que tiene que entregar pruebas y de qué tipo son las
+    mismas (ejercicios o cuestionarios).
+*/
+void pruebas_por_mes(asignatura* asignaturas, int mes) {
+    // Iterar por asignaturas:
+    for(int i = 0; i < N_ASIGNATURAS; i++){
+        printf("Nombre: %s", (asignaturas+i)->nombre);
+        for(int j = 0; j < 7; j++){
+            if(mes == (asignaturas+i)->(prueba+j)->mes){
+                if((asignaturas+i)->(prueba+j)->tipo){
+                    printf("\n dia: %d y tipo ejercicios.", (asignatura+i)->(prueba+j)->dia);
+                } else {
+                    printf("\n dia: %d y tipo cuestionario.", (asignatura+i)->(prueba+j)->dia);
+                }
+            }
+        }
+    }
+    // Iterar por ejercicios:
+    // Si el mes coincide, imprimir el día y que son ejercicios
+    // Iterar por cuestionarios:
+    // Si el mes coincide, imprimir el día y que son cuestionarios
+}
+
+/*
+    c) (1,5 puntos) Diseña una función en C que reciba como parámetro la estructura diseñada en
+    el apartado a) y el nombre de una determinada asignatura y escriba en un fichero la nota final
+    de dicha asignatura (sobre 10) teniendo en cuenta que el 40% de la nota final de la asignatura
+    es la nota de los ejercicios (todos tienen el mismo valor) y el 60% la nota de los cuestionarios
+    (todos tienen el mismo valor).
+*/
+
+// PRECONDICIÓN: hay 8 asignaturas, y una de ellas tiene el nombre proporcionado
+// POSTCONDICIÓN: se ha escrito la nota final de la asignatura en un fichero
+void imprimir_nota_final(asignatura* asignaturas, const char* nombre_asignatura){
+    // Paso 1: encontrar índice de la asignatura
+    int indiceAsig = indice_asignatura(asignaturas, nombre_asignatura);
+    // Paso 2: calcular la nota final
+    float notaFinal = nota_asignatura(asignaturas+indiceAsig);
+
+    // Paso 2.1: calcular la nota media de los ejercicios
+
+    // Paso 2.2: calcular la nota media de los cuestionarios
+    // Paso 2.3: calcular la nota final
+
+    // Paso 3: escribir la nota final en el fichero
+    escribir_en_fichero(asignaturas+indiceAsig, notaFinal);
+    // Paso 3.1: abrir el fichero
+    // Paso 3.2: escribir la nota final
+    // Paso 3.3: cerrar el fichero
+
+    // Puedes hacerlo con distintas funciones, o todo en una sola función, pero empieza por tener claros los pasos y el orden en que van
+}
+
+int indice_asignatura(asignatura* asignaturas, const char* nombre_asignatura){
+    // Completar
+    for(int i = 0; i < N_ASIGNATURAS; i++){
+        if(strcmp(asignatura[i].nombre, nombre_asignatura)){
+            return i;
+        }
+    }
+}
+
+float nota_asignatura(asignatura *asignatura){
+    // Completar
+    float nota1 = 0, nota2 = 0, media = 0;
+    for(int i = 0; i<7; i++){
+        if(asignatura->pruebas[i].tipo){
+            nota1 += asignatura->pruebas[i].nota;
+        } else {
+            nota2 += asignatura->pruebas[i].nota;
+        }
+    }
+
+    nota1 /= 4;
+    nota2 /= 3;
+    media = 0.4*nota1+0.6*nota2;
+
+    return media;
+}
+
+void escribir_en_fichero(asignatura *asignatura, float nota){
+    // Completar (dos versiones):
+    // - Fácil: en un fichero llamado "notas.txt"
+    // - Difícil (pero tampoco mucho): en un fichero con el nombre de la asignatura (por ejemplo, "Literatura checoslovaca del siglo de oro.txt")
+    FILE *f;
+    f = fopen("notas.txt", "w");
+    if(f == NULL){
+        exit(1);
+    }
+
+    fprintf(f, "La nota de %s es: %f", asignatura->nombre, nota);
+    fclose(f);
+}
+
+/*
+    Otra función que podrían pedir con esto:
+    Imprimir la información de las asignaturas por terminal. Esto se puede hacer de varias formas,
+        - Todo en una sola función (como se muestra a continuación)
+        - Modularizando la impresión de las asignaturas, pruebas y notas (con la función imprimir_asignaturas_terminal_modular)
+*/
+void imprimir_asignaturas_terminal(asignatura* asignaturas){
+    for (int i = 0; i < 8; ++i){
+        printf("Asignatura: %s\n", asignaturas[i].nombre);
+        for (int j = 0; j < 4; ++j){
+            printf(
+                "Dia %d-%d: Entrega de ejercicios. Nota: %f\n",
+                asignaturas[i].ejercicios[j].dia,
+                asignaturas[i].ejercicios[j].mes,
+                asignaturas[i].ejercicios[j].calificacion
+            );
+        }
+        for (int j = 0; j < 3; ++j){
+            printf(
+                "Dia %d-%d: Entrega de cuestionarios. Nota: %f\n",
+                asignaturas[i].cuestionarios[j].dia,
+                asignaturas[i].cuestionarios[j].mes,
+                asignaturas[i].cuestionarios[j].calificacion
+            );
+        }
+    }
+}
+
+void imprimir_asignaturas_terminal_modular(asignatura* asignaturas){
+    // Esta función NO necesita modificaciones, pero debe imprimir en el mismo formato que la anterior
+    for (int i = 0; i < 8; ++i) imprimir_asignatura_terminal(&asignaturas[i]);
+}
+void imprimir_asignatura_terminal(asignatura *A){
+    // Completar
+}
+void imprimir_prueba_terminal(prueba *P, const char *tipo){
+    // Completar
+}
+
+/*
+    Otra función que podrían pedir con esto:
+    Imprimir todas las asignaturas, cada una en un fichero con el nombre de la asignatura (sin que la precondición aclare cuántas son),
+    con sus notas finales, fechas de actividades y sus notas
+*/
+void imprimir_asignaturas(conjunto_asignaturas* asignaturas){
+    // Paso 1: Reservar memoria para almacenar la información ausente (notas finales)
+
+    // Paso 2: Calcular las notas finales de todas las asignaturas
+    //  - Iterar por todas las asignaturas
+    //  -   Calcular la nota final de cada asignatura
+    //  -   Guardar la nota final en la "estructura" creada en el paso 1
+
+    // Paso 3: Imprimir la información
+    // - Reservar memoria para los nombre de ficheros
+    // - Iterar por todas las asignaturas
+    // -    Crear el nombre del fichero (realojar memoria)
+    // -    Abrir el fichero
+    // -    Imprimir el nombre de la asignatura
+    // -    Imprimir las fechas de las actividades y sus notas
+    // -    Imprimir la nota final
+    // -    Cerrar el fichero
+    // - Liberar la memoria reservada para el nombre del fichero
+
+    // Paso 4: ¿Qué falta?
+}
+
+int main(){
+    asignatura asignaturas[8] = {
+        {"Matemáticas", {{1, 10, 5}, {15, 10, 6}, {1, 11, 7}, {15, 11, 8}}, {{5, 10, 6}, {20, 10, 7}, {5, 11, 8}}},
+        {"Física", {{2, 10, 6}, {16, 10, 7}, {2, 11, 8}, {16, 11, 9}}, {{6, 10, 7}, {21, 10, 8}, {6, 11, 9}}},
+        {"Química", {{3, 10, 7}, {17, 10, 8}, {3, 11, 9}, {17, 11, 10}}, {{7, 10, 8}, {22, 10, 9}, {7, 11, 10}}},
+        {"Biología", {{4, 10, 8}, {18, 10, 9}, {4, 11, 10}, {18, 11, 5}}, {{8, 10, 9}, {23, 10, 10}, {8, 11, 5}}},
+        {"Historia", {{5, 10, 9}, {19, 10, 10}, {5, 11, 5}, {19, 11, 6}}, {{9, 10, 10}, {24, 10, 5}, {9, 11, 6}}},
+        {"Lengua", {{6, 10, 10}, {20, 10, 5}, {6, 11, 6}, {20, 11, 7}}, {{10, 10, 5}, {25, 10, 6}, {10, 11, 7}}},
+        {"Inglés", {{7, 10, 5}, {21, 10, 6}, {7, 11, 7}, {21, 11, 8}}, {{11, 10, 6}, {26, 10, 7}, {11, 11, 8}}},
+        {"Francés", {{8, 10, 6}, {22, 10, 7}, {8, 11, 8}, {22, 11, 9}}, {{12, 10, 7}, {27, 10, 8}, {12, 11, 9}}}
+    };
+
+    return 0;
+}
